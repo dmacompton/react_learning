@@ -2,17 +2,6 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 </head>
 <body>
-	<audio class="player" src="sound.mp3" controls></audio>
     <div id="root"></div>
     <script src="main.js"></script>
 </body>
-<script>
-	// document.querySelector('.player').play();
-	// document.querySelector('.player').pause();
-	// document.querySelector('.player').playbackRate = 2;
-	var player = document.querySelector('.player');
-	player.ontimeupdate = function() {
-		console.log(player.currentTime);
-	};
-</script>
-

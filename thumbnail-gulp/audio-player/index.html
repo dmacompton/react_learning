@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Audio player</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/font-awesome.css">
+</head>
+<body>
+    <div style="height: 200px; display: block;"></div>
+    <div class="row">
+        <div class="col-xs-4 col-xs-offset-4">
+            <div class="player">
+                <audio src="sound.mp3"></audio>
+                <button class="btn btn-xs btn-primary btn-play fa fa-play"></button>
+            </div>
+            <div class="player">
+                <audio src="sound.mp3"></audio>
+                <button class="btn btn-xs btn-primary btn-play fa fa-play"></button>
+            </div>
+            <div class="player">
+                <audio src="sound.mp3"></audio>
+                <button class="btn btn-xs btn-primary btn-play fa fa-play"></button>
+            </div>
+            <div class="player">
+                <audio src="sound.mp3"></audio>
+                <button class="btn btn-xs btn-primary btn-play fa fa-play"></button>
+            </div>
+            <div class="player">
+                <audio src="sound.mp3"></audio>
+                <button class="btn btn-xs btn-primary btn-play fa fa-play"></button>
+            </div>
+        </div>
+    </div>
+
+    <script src="jquery-2.1.1.js"></script>
+    <script src="jquery.knob.js"></script>
+    <script src="https://ringostat.com/static/js/vendors/bootstrap/bootstrap.min.js"></script>
+</body>
+
+<script>
+    $(document).ready(function(){
+        
+        $(document).on('click', '.btn-play', function () {
+            var $this = $(this);
+            var player = $this.parent().find('audio').get(0);
+            var otherPlayerBtn = $('.btn-play');
+            var otherPlayer = otherPlayerBtn.not(this).parent().find('audio');
+
+            player.playbackRate = 1;
+            
+            if (player.paused) {
+                otherPlayer.map(function(){
+                    this.pause();
+                    this.currentTime = 0;
+                });
+                otherPlayerBtn.removeClass('btn-warning fa-stop').addClass('btn-primary fa-play');
+                $this.toggleClass('btn-primary fa-play btn-warning fa-stop');
+                player.play();
+            } else {
+                $this.toggleClass('btn-warning fa-stop btn-primary fa-play');
+                player.pause();
+                player.currentTime = 0;
+            }
+        });
+        $(".player audio").on('timeupdate', function() {
+            var current = this.currentTime / this.duration * 100;
+            var $this = $(this);
+            if(current == 100) {
+                this.currentTime = 0;
+                this.pause();
+                $(".btn-play").popover('hide');
+               $this.parent().find('.btn-play').toggleClass('btn-warning fa-stop btn-primary fa-play');
+            }
+           $this.parent().find('.dma').html(parseInt(this.currentTime));
+
+            $(".knob").val(current).trigger('change');
+        });
+        
+        $(document).on('click', '.btn-speed', function () {
+            var $this = $(this);
+            var player = $this.parent().parent().parent().parent().parent().find('audio').get(0);
+            var speed = $this.data('speed');
+            
+            $this.parent().find('.active').removeClass('active');
+            $this.addClass('active');
+            
+            player.playbackRate = speed;
+            player.play();
+        });
+
+        $(".btn-play").on('click',function(){
+            var $this = $(this);
+            var player = $this.parent().find('audio').get(0);
+
+            $this.on('shown.bs.popover', function () {
+                $(".knob").knob({
+                    fgColor: "#69A571",
+                    bgColor: "#eee",
+                    width: 100,
+                    height: 100,
+                    displayInput: 0,
+                    change: function (value) {
+                        player.currentTime = player.duration * value / 100;
+                    }
+                });
+                $('.hide-block-player').hide();
+            });
+            $('.btn-play').not(this).popover('hide');
+        });
+        $(".btn-play").popover({
+            placement: "top",
+            trigger: "click",
+            animation: true,
+            html: true,
+            content: "<div class='hide-block-player'></div>" +
+            "<input class='knob' data-thickness='.3' data-step='1' data-height='100' style='width: 100px;'>" +
+                    "<p class='dma'>dma</p>"+
+            "<div class='text-center'>" +
+                "<div class='btn-group'>" +
+                    "<button class='btn btn-sm btn-primary btn-speed fa fa-play active' data-speed='1'></button> " +
+                    "<button class='btn btn-sm btn-primary btn-speed fa fa-pause' data-speed='0'></button> " +
+                    "<button class='btn btn-sm btn-primary btn-speed fa fa-forward' data-speed='3'></button>" +
+                "</div>"+
+            "</div>"
+        });
+    });
+</script>
+<style>
+        .hide-block-player {
+            width: 100px;
+            height: 79px;
+        }
+
+        .dma {
+            position: absolute;
+            top: 48px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 20px;
+            line-height: normal;
+            font-family: Arial;
+            color: rgb(105, 165, 113);
+        }
+</style>
+
+</html>

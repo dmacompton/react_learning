@@ -29,6 +29,6 @@ app.components = app.components || {};
 		}
 	});
 
-	ReactDOM.render(<Timer />, apps);
+	ReactDOM.render(<Timer />, document.getElementById('apps'));
 
 })();

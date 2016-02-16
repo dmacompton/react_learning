@@ -28,4 +28,12 @@ class UnorderedList extends React.Component {
 	}
 }
 
+class App extends React.Component {
+	render() {
+		return <div>
+			<Dropdown />
+		</div>
+	}
+}
+
 ReactDOM.render(<App />, root);
